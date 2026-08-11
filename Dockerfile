@@ -5,14 +5,14 @@ FROM php:8.2-apache
 RUN a2enmod rewrite
 
 # 2. Install system dependencies and required PHP extensions
+# ADDED libonig-dev for mbstring, and libxml2-dev for XML support
 RUN apt-get update && apt-get install -y \
-    libpng-dev libjpeg-dev libfreetype6-dev libzip-dev unzip \
+    libpng-dev libjpeg-dev libfreetype6-dev libzip-dev unzip libonig-dev libxml2-dev \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) gd zip pdo_mysql mbstring bcmath \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # 3. Configure Apache to use the 'public' folder as the root
-# (If your specific version of LavaLust does NOT use a 'public' folder, change this to /var/www/html)
 ENV APACHE_DOCUMENT_ROOT /var/www/html/public
 
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
