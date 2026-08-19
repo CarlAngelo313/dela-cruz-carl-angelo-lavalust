@@ -80,7 +80,10 @@ $config['environment'] = getenv('APP_ENV') ?: 'development';
 |
 */
 $config['base_url'] 				= 'http://localhost/carl_finals/LavaLust/';
-
+// Dynamically detect protocol (http/https) and host (localhost / onrender.com)
+$protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'http';
+$host = $_SERVER['HTTP_HOST'];
+$config['base_url'] = $protocol . '://' . $host . '/';
 /*
 |--------------------------------------------------------------------------
 | Static File Proxies
@@ -99,7 +102,7 @@ $config['proxy_enabled']           = FALSE;
 | variable to blank.
 |
 */
-$config['index_page']               = 'index.php';
+$config['index_page']               = '';
 
 /*
 |--------------------------------------------------------------------------
